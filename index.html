@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="title" content="AVA: Camera-Invariant Imitation Learning via Adversarial View Alignment">
+  <meta name="description" content="AVA jointly learns visuomotor policies and viewpoint-invariant visual features from labeled demonstration views and unlabeled auxiliary views, improving robustness to unseen camera viewpoints.">
+  <meta name="keywords" content="AVA, Adversarial View Alignment, imitation learning, camera invariance, visuomotor policy, ACT, Diffusion Policy, robotics">
+  <meta name="author" content="Tewodros W. Ayalew, Xiangshan Tan, Matthew R. Walter">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="AVA">
+  <meta property="og:title" content="AVA: Camera-Invariant Imitation Learning via Adversarial View Alignment">
+  <meta property="og:description" content="AVA jointly learns visuomotor policies and viewpoint-invariant visual features from labeled demonstration views and unlabeled auxiliary views.">
+  <meta property="og:url" content="https://YOUR_DOMAIN.com/ava">
+  <meta property="og:image" content="static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AVA project preview">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="Imitation Learning">
+  <meta property="article:tag" content="Viewpoint Generalization">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AVA: Camera-Invariant Imitation Learning via Adversarial View Alignment">
+  <meta name="twitter:description" content="AVA jointly learns visuomotor policies and viewpoint-invariant visual features from labeled demonstration views and unlabeled auxiliary views.">
+  <meta name="twitter:image" content="static/images/social_preview.png">
+  <meta name="twitter:image:alt" content="AVA project preview">
+
+  <meta name="citation_title" content="Camera-Invariant Imitation Learning via Adversarial View Alignment">
+  <meta name="citation_author" content="Ayalew, Tewodros W.">
+  <meta name="citation_author" content="Tan, Xiangshan">
+  <meta name="citation_author" content="Walter, Matthew R.">
+
+  <meta name="theme-color" content="#9560b8">
+  <meta name="msapplication-TileColor" content="#4d77b3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>AVA: Camera-Invariant Imitation Learning via Adversarial View Alignment</title>
+
+  <link rel="icon" type="image/png" href="static/images/favicon.png">
+  <link rel="apple-touch-icon" href="static/images/favicon.png">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Camera-Invariant Imitation Learning via Adversarial View Alignment",
+    "alternateName": "AVA",
+    "description": "AVA jointly learns visuomotor policies and viewpoint-invariant visual features from labeled demonstration views and unlabeled auxiliary views.",
+            "author": [
+      {
+        "@type": "Person",
+        "name": "Tewodros W. Ayalew",
+        "url": "https://tedywond.github.io/",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "The University of Chicago"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Xiangshan Tan",
+        "url": "https://vincent-tann.github.io/",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Toyota Technological Institute at Chicago"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Matthew R. Walter",
+        "url": "https://home.ttic.edu/~mwalter/",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Toyota Technological Institute at Chicago"
+        }
+      }
+    ],
+    "keywords": ["AVA", "imitation learning", "camera invariance", "visuomotor policy"],
+    "abstract": "Visuomotor policies trained from fixed camera viewpoints often fail under camera repositioning. AVA improves viewpoint robustness by jointly learning action prediction and viewpoint-invariant representations from labeled demonstration views and unlabeled auxiliary views, without camera geometry and without changing the deployed policy interface.",
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <div class="brand-ava">AVA</div>
+            <h1 class="title is-1 publication-title">
+              Camera-Invariant Imitation Learning via<br>
+              <span class="ava-name">Adversarial View Alignment</span>
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://tedywond.github.io/" target="_blank">Tewodros W. Ayalew</a><sup>1,*</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://vincent-tann.github.io/" target="_blank">Xiangshan Tan</a><sup>2,*</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://home.ttic.edu/~mwalter/" target="_blank">Matthew R. Walter</a><sup>2</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors affiliations">
+              <span class="author-block"><sup>1</sup>The University of Chicago</span>
+              <span class="author-block"><sup>2</sup>Toyota Technological Institute at Chicago</span>
+              <span class="eql-cntrb"><small><br><sup>*</sup>Equal contribution</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>GitHub</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Moving-camera teaser slider -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <div id="teaser-carousel" class="carousel results-carousel">
+          <div class="item item-video-teaser-real">
+            <video id="teaser-real" controls muted playsinline height="100%" preload="metadata">
+              <source src="static/videos/moving_camera_real.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">Real world · moving camera</h2>
+          </div>
+          <div class="item item-video-teaser-sim">
+            <video id="teaser-sim" controls muted playsinline height="100%" preload="metadata">
+              <source src="static/videos/moving_camera.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">Simulation · moving camera</h2>
+          </div>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          Learn the task. Align the views. Stronger performance on unseen viewpoints while preserving demonstration-view performance.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Visuomotor policies for robotic manipulation are often trained and evaluated with cameras mounted at fixed poses, but even small viewpoint changes can cause large performance drops when imitation learning latches onto camera-specific cues. We present <strong>Adversarial View Alignment (AVA)</strong>, a lightweight training framework that jointly learns action prediction and viewpoint-invariant visual representations from expert actions on demonstration views and unlabeled RGB observations from auxiliary views—without matched cross-view observations, camera geometry, or changes to the deployed policy interface. Evaluated with ACT and Diffusion Policy across eight simulated manipulation tasks and with ACT on two real-world robotic tasks, AVA improves robustness to previously unseen viewpoints while preserving performance on demonstration viewpoints.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Method: progressive build matching ava_method.html stages -->
+  <section class="section" id="method">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Method</h2>
+      <div class="content has-text-justified">
+        <p>
+          AVA adds a small adversarial branch to the visual features of an existing visuomotor policy.
+          Components appear in the same order as the method animation: policy network, auxiliary branch,
+          gradient flow, then policy rollout with the discriminator removed.
+        </p>
+      </div>
+
+      <div class="method-stage">
+        <h3 class="title is-4">01 · Policy network</h3>
+        <p class="method-stage-text">
+          <span class="component demo">Demonstration observations</span> pass through the
+          <span class="component encoder">visual encoder</span> and
+          <span class="component policy">policy head</span> to predict expert actions, supervised by the imitation loss.
+        </p>
+        <div class="figure-panel">
+          <video class="method-anim" poster="static/images/method_01_policy.png" muted loop playsinline preload="metadata" aria-label="AVA policy network animation">
+            <source src="static/videos/method_01_policy.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="method-stage">
+        <h3 class="title is-4">02 · Auxiliary branch</h3>
+        <p class="method-stage-text">
+          <span class="component aux">Auxiliary observations</span> share the
+          <span class="component encoder">encoder</span>.
+          Both demonstration and auxiliary features train the
+          <span class="component aux">view discriminator</span>.
+        </p>
+        <div class="figure-panel">
+          <video class="method-anim" poster="static/images/method_02_auxiliary.png" muted loop playsinline preload="metadata" aria-label="AVA auxiliary branch animation">
+            <source src="static/videos/method_02_auxiliary.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="method-stage">
+        <h3 class="title is-4">03 · Imitation gradients</h3>
+        <p class="method-stage-text">
+          <span class="component loss">Imitation loss</span> backpropagates through the
+          <span class="component policy">policy head</span> into the shared
+          <span class="component encoder">visual encoder</span>.
+        </p>
+        <div class="figure-panel">
+          <video class="method-anim" poster="static/images/method_03_imitation_grad.png" muted loop playsinline preload="metadata" aria-label="Imitation gradient animation">
+            <source src="static/videos/method_03_imitation_grad.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="method-stage">
+        <h3 class="title is-4">04 · Adversarial loss</h3>
+        <p class="method-stage-text">
+          <span class="component aux">Adversarial loss</span> trains the
+          <span class="component aux">discriminator</span> to classify the camera domain.
+        </p>
+        <div class="figure-panel">
+          <video class="method-anim" poster="static/images/method_04_adversarial.png" muted loop playsinline preload="metadata" aria-label="Adversarial loss animation">
+            <source src="static/videos/method_04_adversarial.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="method-stage">
+        <h3 class="title is-4">05 · Gradient reversal</h3>
+        <p class="method-stage-text">
+          At the <span class="component grl">GRL</span>, the gradient is inverted by
+          <span class="component grl">× −α(k)</span> before reaching the
+          <span class="component encoder">encoder</span>, so the encoder learns to confuse views.
+        </p>
+        <div class="figure-panel">
+          <video class="method-anim" poster="static/images/method_05_grl.png" muted loop playsinline preload="metadata" aria-label="Gradient reversal animation">
+            <source src="static/videos/method_05_grl.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="method-stage">
+        <h3 class="title is-4">06 · Policy rollout</h3>
+        <p class="method-stage-text">
+          The <span class="component aux">discriminator</span> is dropped during rollout.
+          Only observation → encoder → policy head → action remains — the same deployed policy interface.
+        </p>
+        <div class="figure-panel">
+          <video class="method-anim" poster="static/images/method_06_rollout.png" muted loop playsinline preload="metadata" aria-label="Policy rollout animation">
+            <source src="static/videos/method_06_rollout.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Experiments overview -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Experiments</h2>
+      <div class="content has-text-justified">
+        <p>
+          We study viewpoint robustness in simulation and on a real robot. Policies are trained with demonstration
+          viewpoints and unlabeled auxiliary viewpoints, then evaluated on demonstration, auxiliary, and novel cameras.
+        </p>
+      </div>
+      <div class="callout-row">
+        <div class="callout">
+          <span class="value">8</span>
+          <span class="label">Simulated tasks</span>
+        </div>
+        <div class="callout">
+          <span class="value">2</span>
+          <span class="label">Real-world tasks</span>
+        </div>
+        <div class="callout">
+          <span class="value">800</span>
+          <span class="label">Physical robot rollouts</span>
+        </div>
+        <div class="callout">
+          <span class="value">ACT + DP</span>
+          <span class="label">Policy backbones</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Task image grids -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Tasks</h2>
+
+      <h3 class="title is-4 task-grid-heading">Simulation</h3>
+      <div class="task-grid task-grid-sim">
+        <figure class="task-card">
+          <img src="static/images/metaworld_hammer_initial_states_compressed.jpg" alt="MetaWorld Hammer" loading="lazy"/>
+          <figcaption>MetaWorld Hammer</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/metaworld_drawer_open_initial_states_compressed.jpg" alt="MetaWorld Drawer Open" loading="lazy"/>
+          <figcaption>MetaWorld Drawer Open</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/metaworld_door_close_initial_states_compressed.jpg" alt="MetaWorld Door Close" loading="lazy"/>
+          <figcaption>MetaWorld Door Close</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/metaworld_window_open_initial_states_compressed.jpg" alt="MetaWorld Window Open" loading="lazy"/>
+          <figcaption>MetaWorld Window Open</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/maniskill_pull_cube_tool_initial_states_compressed.jpg" alt="ManiSkill Pull Cube Tool" loading="lazy"/>
+          <figcaption>ManiSkill Pull Cube Tool</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/maniskill_push_cube_initial_states_compressed.jpg" alt="ManiSkill Push Cube" loading="lazy"/>
+          <figcaption>ManiSkill Push Cube</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/maniskill_stack_cube_initial_states_compressed.jpg" alt="ManiSkill Stack Cube" loading="lazy"/>
+          <figcaption>ManiSkill Stack Cube</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/maniskill_lift_peg_upright_initial_states_compressed.jpg" alt="ManiSkill Lift Peg Upright" loading="lazy"/>
+          <figcaption>ManiSkill Lift Peg Upright</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="title is-4 task-grid-heading">Real World</h3>
+      <div class="task-grid task-grid-real">
+        <figure class="task-card">
+          <img src="static/images/real_world_recycle_bottle_initial_states.png" alt="Real-world Recycle Bottle" loading="lazy"/>
+          <figcaption>Recycle Bottle</figcaption>
+        </figure>
+        <figure class="task-card">
+          <img src="static/images/real_world_push_ramen_initial_states.png" alt="Real-world Push Ramen" loading="lazy"/>
+          <figcaption>Push Ramen</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Results figures -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Results</h2>
+      <div class="content has-text-justified">
+        <p>
+          AVA improves robustness under auxiliary and novel viewpoints while preserving demonstration-view performance
+          for both ACT and Diffusion Policy in simulation, and for ACT on real-world tasks.
+        </p>
+      </div>
+
+      <div class="figure-panel">
+        <img src="static/images/trajectory_performance.png" alt="Simulation trajectory performance across viewpoints" loading="lazy"/>
+        <p class="figure-caption">
+          Simulation: normalized task scores across demonstration, auxiliary, and novel viewpoints.
+        </p>
+      </div>
+
+      <div class="figure-panel">
+        <img src="static/images/real_robot_eval.png" alt="Real-robot evaluation across viewpoints" loading="lazy"/>
+        <p class="figure-caption">
+          Real robot: ACT-based methods on demonstration, auxiliary, and novel viewpoints for Recycle Bottle and Push Ramen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Novel-view video carousel -->
+  <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3 has-text-centered">Novel Views</h2>
+        <p class="subtitle has-text-centered" style="margin-bottom: 1.5rem;">
+          Without alignment, performance degrades on unseen cameras. AVA generalizes more reliably.
+        </p>
+        <div id="novel-carousel" class="carousel results-carousel">
+          <div class="item item-video1">
+            <video poster="" id="video1" controls muted playsinline height="100%" preload="metadata">
+              <source src="static/videos/novel_pull_cube.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">Pull Cube Tool · novel views</h2>
+          </div>
+          <div class="item item-video2">
+            <video poster="" id="video2" controls muted playsinline height="100%" preload="metadata">
+              <source src="static/videos/novel_hammer.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">Hammer · novel views</h2>
+          </div>
+          <div class="item item-video3">
+            <video poster="" id="video3" controls muted playsinline height="100%" preload="metadata">
+              <source src="static/videos/novel_ur5.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">UR5 Recycle Bottle · novel views</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Full project overview video -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Project Video</h2>
+      <div class="figure-panel">
+        <video poster="static/images/social_preview.png" id="project-video" controls muted loop preload="metadata">
+          <source src="static/videos/teaser.mp4" type="video/mp4">
+        </video>
+        <p class="figure-caption">
+          Full project overview: motivation, method, experiments, and takeaways.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Takeaways -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Takeaways</h2>
+      <div class="method-steps">
+        <div class="method-step demo">
+          <h4>Learn from unlabeled views</h4>
+          <p>Use auxiliary observations without additional action labels.</p>
+        </div>
+        <div class="method-step align">
+          <h4>Generalize to unseen viewpoints</h4>
+          <p>Improve viewpoint robustness while preserving demonstration-view performance.</p>
+        </div>
+        <div class="method-step deploy">
+          <h4>Same policy interface</h4>
+          <p>The discriminator is needed only during training.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BibTeX -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@article{ava2025,
+  title={Camera-Invariant Imitation Learning via Adversarial View Alignment},
+  author={Tewodros W. Ayalew and Xiangshan Tan and Matthew R. Walter},
+  year={2025},
+  url={https://YOUR_DOMAIN.com/ava}
+}</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>
+              which was adopted from the
+              <a href="https://nerfies.github.io" target="_blank">Nerfies</a>
+              project page.
+              You are free to borrow the source code of this website, we just ask that you link back to this page in the footer.
+              <br>
+              This website is licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </main>
+</body>
+</html>
